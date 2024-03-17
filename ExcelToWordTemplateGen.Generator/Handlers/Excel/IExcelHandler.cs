@@ -1,6 +1,6 @@
 ﻿using System.Data;
 
-namespace ExcelToWordTemplateGen.Generator.Handlers;
+namespace ExcelToWordTemplateGen.Generator.Handlers.Excel;
 
 public interface IExcelHandler
 {

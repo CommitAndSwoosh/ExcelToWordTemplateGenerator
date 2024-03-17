@@ -1,4 +1,5 @@
-﻿using ExcelToWordTemplateGen.Generator.Handlers;
+﻿using ExcelToWordTemplateGen.Generator.Handlers.Excel;
+using ExcelToWordTemplateGen.Generator.Handlers.Word;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Data;
@@ -46,9 +47,7 @@ public sealed class Generator : IGenerator
                         var createdFileNames = _wordHandler.GenerateWordFiles(
                             _options.TemplateFilePath,
                             _options.OutputDirectory,
-                            definition,
-                            _options.OutputFileNamePrefix,
-                            _options.OutputFileNameSuffixDefinition);
+                            definition);
 
                         foreach (var fileName in createdFileNames)
                         {

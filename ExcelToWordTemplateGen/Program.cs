@@ -5,7 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using ExcelToWordTemplateGen.Generator;
-using ExcelToWordTemplateGen.Generator.Handlers;
+using ExcelToWordTemplateGen.Generator.Handlers.Word;
+using ExcelToWordTemplateGen.Generator.Handlers.Excel;
 
 var application = AppStartup();
 //application.Run();
@@ -45,6 +46,7 @@ static IHost AppStartup()
         .ConfigureServices((context, services) =>
         {
             services.Configure<GeneratorOptions>(context.Configuration.GetSection("Generator"));
+            services.Configure<OutputOptions>(context.Configuration.GetSection("Generator:Output"));
             services.AddScoped<IGenerator, Generator>();
             services.AddScoped<IWordHandler, WordHandler>();
             services.AddScoped<IExcelHandler, ExcelHandler>();

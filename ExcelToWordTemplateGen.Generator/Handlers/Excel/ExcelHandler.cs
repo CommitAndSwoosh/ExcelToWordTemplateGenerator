@@ -3,7 +3,7 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.Extensions.Logging;
 using System.Data;
 
-namespace ExcelToWordTemplateGen.Generator.Handlers;
+namespace ExcelToWordTemplateGen.Generator.Handlers.Excel;
 
 public sealed class ExcelHandler : IExcelHandler
 {
@@ -20,6 +20,7 @@ public sealed class ExcelHandler : IExcelHandler
 
         using (SpreadsheetDocument doc = SpreadsheetDocument.Open(filePath, false))
         {
+            _logger.LogInformation($"Opened '{filePath}' to process rows");
             WorkbookPart workbookPart = doc.WorkbookPart ?? doc.AddWorkbookPart();
             WorksheetPart worksheetPart = workbookPart.WorksheetParts.First();
             SheetData sheetData = worksheetPart.Worksheet.Elements<SheetData>().First();
@@ -74,7 +75,7 @@ public sealed class ExcelHandler : IExcelHandler
             string value = cell.CellValue.InnerXml;
             if (cell != null && cell.DataType != null && cell.DataType.Value == CellValues.SharedString)
             {
-                return stringTablePart.SharedStringTable.ChildElements[Int32.Parse(value)].InnerText;
+                return stringTablePart.SharedStringTable.ChildElements[int.Parse(value)].InnerText;
             }
             else
             {
