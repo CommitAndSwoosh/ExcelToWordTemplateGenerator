@@ -37,13 +37,12 @@ static IHost AppStartup()
     ConfigurationSetup(builder);
 
     Log.Logger = new LoggerConfiguration()
-        .WriteTo.Console()
         .Enrich.FromLogContext()
         .ReadFrom.Configuration(builder.Build())
-        .CreateLogger();    
+        .CreateLogger();
 
     var host = Host.CreateDefaultBuilder()
-        .ConfigureServices((context, services) => 
+        .ConfigureServices((context, services) =>
         {
             services.Configure<GeneratorOptions>(context.Configuration.GetSection("Generator"));
             services.AddScoped<IGenerator, Generator>();

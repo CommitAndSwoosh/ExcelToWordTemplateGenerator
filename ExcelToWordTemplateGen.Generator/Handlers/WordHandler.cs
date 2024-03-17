@@ -93,7 +93,7 @@ public class WordHandler : IWordHandler
         {
             var rowValue = dataRow[column].ToString();
             Regex regex = new Regex("%" + column.ColumnName.ToUpper() + "%");
-            docText = regex.Replace(docText, rowValue);
+            docText = regex.Replace(docText, rowValue!);
         }
 
         using (StreamWriter sw = new StreamWriter(doc.MainDocumentPart.GetStream(FileMode.Create)))

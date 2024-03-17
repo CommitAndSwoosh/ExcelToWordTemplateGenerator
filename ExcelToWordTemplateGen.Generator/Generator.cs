@@ -7,14 +7,14 @@ namespace ExcelToWordTemplateGen.Generator;
 
 public sealed class Generator : IGenerator
 {
-    private readonly IOptions<GeneratorOptions> _options;
+    private readonly GeneratorOptions _options;
     private readonly ILogger<Generator> _logger;
     private readonly IExcelHandler _excelHandler;
     private readonly IWordHandler _wordHandler;
 
     public Generator(IOptions<GeneratorOptions> options, IExcelHandler excelHandler, IWordHandler wordHandler, ILogger<Generator> logger)
     {
-        _options = options;
+        _options = options.Value;
         _excelHandler = excelHandler;
         _wordHandler = wordHandler;
         _logger = logger;
@@ -24,7 +24,7 @@ public sealed class Generator : IGenerator
     {
         if (Setup())
         {
-            var excelFiles = Directory.GetFiles(_options.Value.InputDirectory, "*.xlsx");
+            var excelFiles = Directory.GetFiles(_options.InputDirectory, "*.xlsx");
             List<DataTable> excelDefinitions = new();
 
             foreach (var excelFile in excelFiles)
@@ -44,11 +44,11 @@ public sealed class Generator : IGenerator
                     if (definition != null)
                     {
                         var createdFileNames = _wordHandler.GenerateWordFiles(
-                            _options.Value.TemplateFilePath,
-                            _options.Value.OutputDirectory,
+                            _options.TemplateFilePath,
+                            _options.OutputDirectory,
                             definition,
-                            _options.Value.OutputFileNamePrefix,
-                            _options.Value.OutputFileNameSuffixDefinition);
+                            _options.OutputFileNamePrefix,
+                            _options.OutputFileNameSuffixDefinition);
 
                         foreach (var fileName in createdFileNames)
                         {
@@ -72,47 +72,47 @@ public sealed class Generator : IGenerator
             return false;
         }
 
-        if (string.IsNullOrWhiteSpace(_options.Value.InputDirectory))
+        if (string.IsNullOrWhiteSpace(_options.InputDirectory))
         {
             _logger.LogError("InputDirectory must be given - Setup failed.");
             return false;
         }
 
-        if (string.IsNullOrWhiteSpace(_options.Value.OutputDirectory))
+        if (string.IsNullOrWhiteSpace(_options.OutputDirectory))
         {
             _logger.LogError("OuputDirectory must be given - Setup failed.");
             return false;
         }
 
-        if (!Directory.Exists(_options.Value.InputDirectory))
+        if (!Directory.Exists(_options.InputDirectory))
         {
-            _logger.LogError($"Input directory does not exist '{_options.Value.InputDirectory}'");
+            _logger.LogError($"Input directory does not exist '{_options.InputDirectory}'");
             return false;
         }
         else
         {
-            if (Directory.GetFiles(_options.Value.InputDirectory).Length == 0)
+            if (Directory.GetFiles(_options.InputDirectory).Length == 0)
             {
-                _logger.LogInformation($"No files to process found in '{_options.Value.InputDirectory}'");
+                _logger.LogInformation($"No files to process found in '{_options.InputDirectory}'");
             }
         }
 
-        if (!Directory.Exists(_options.Value.OutputDirectory))
+        if (!Directory.Exists(_options.OutputDirectory))
         {
-            _logger.LogWarning($"Output directory does not exist, trying to create '{_options.Value.OutputDirectory}'");
+            _logger.LogWarning($"Output directory does not exist, trying to create '{_options.OutputDirectory}'");
 
             try
             {
-                var directory = Directory.CreateDirectory(_options.Value.OutputDirectory);
+                var directory = Directory.CreateDirectory(_options.OutputDirectory);
 
                 if (directory.Exists)
                 {
-                    _logger.LogInformation($"Output directory has been successfully created '{_options.Value.OutputDirectory}'");
+                    _logger.LogInformation($"Output directory has been successfully created '{_options.OutputDirectory}'");
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Unable to create directory {_options.Value.OutputDirectory}");
+                _logger.LogError(ex, $"Unable to create directory {_options.OutputDirectory}");
             }
         }
 
