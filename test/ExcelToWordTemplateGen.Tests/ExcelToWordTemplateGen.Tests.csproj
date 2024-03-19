@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ExcelToWordTemplateGen.Generator\ExcelToWordTemplateGen.Generator.csproj" />
+    <ProjectReference Include="..\..\src\ExcelToWordTemplateGen.Generator\ExcelToWordTemplateGen.Generator.csproj" />
   </ItemGroup>
 
   <ItemGroup>
