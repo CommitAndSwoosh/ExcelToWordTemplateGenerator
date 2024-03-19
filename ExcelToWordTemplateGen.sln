@@ -5,7 +5,13 @@ VisualStudioVersion = 17.8.34601.278
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExcelToWordTemplateGen", "ExcelToWordTemplateGen\ExcelToWordTemplateGen.csproj", "{52980DF4-8E96-4333-8915-BBACC503736A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelToWordTemplateGen.Generator", "ExcelToWordTemplateGen.Generator\ExcelToWordTemplateGen.Generator.csproj", "{1A86DA88-AE48-410F-A410-48DF6D9E9E45}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExcelToWordTemplateGen.Generator", "ExcelToWordTemplateGen.Generator\ExcelToWordTemplateGen.Generator.csproj", "{1A86DA88-AE48-410F-A410-48DF6D9E9E45}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{5A2C41EF-EE5B-4EAF-A890-FC4C495837F7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelToWordTemplateGen.Tests", "ExcelToWordTemplateGen.Tests\ExcelToWordTemplateGen.Tests.csproj", "{7997ADF9-9222-4787-82B8-A57E9E06E5A6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{170CA441-F385-4ABC-9D5A-B5C9F3CD1D02}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,9 +27,18 @@ Global
 		{1A86DA88-AE48-410F-A410-48DF6D9E9E45}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A86DA88-AE48-410F-A410-48DF6D9E9E45}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A86DA88-AE48-410F-A410-48DF6D9E9E45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7997ADF9-9222-4787-82B8-A57E9E06E5A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7997ADF9-9222-4787-82B8-A57E9E06E5A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7997ADF9-9222-4787-82B8-A57E9E06E5A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7997ADF9-9222-4787-82B8-A57E9E06E5A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{52980DF4-8E96-4333-8915-BBACC503736A} = {170CA441-F385-4ABC-9D5A-B5C9F3CD1D02}
+		{1A86DA88-AE48-410F-A410-48DF6D9E9E45} = {170CA441-F385-4ABC-9D5A-B5C9F3CD1D02}
+		{7997ADF9-9222-4787-82B8-A57E9E06E5A6} = {5A2C41EF-EE5B-4EAF-A890-FC4C495837F7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AB37B003-C7B1-4A53-89D3-D479E4B1EABE}

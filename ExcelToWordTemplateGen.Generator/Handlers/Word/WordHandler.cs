@@ -32,30 +32,42 @@ public class WordHandler : IWordHandler
                 pathName = pathName + "_" + (existingFiles + 1);
             }
 
-            using (var file = WordprocessingDocument.Open(templateFilePath, false))
+            using var file = WordprocessingDocument.Open(templateFilePath, false);
+            if (file != null)
             {
-                if (file != null)
+                string clonedFileName = pathName + ".docx";
+                using (var clonedFile = file.Clone(clonedFileName, true))
                 {
-                    string clonedFileName = pathName + ".docx";
-                    using var clonedFile = file.Clone(clonedFileName, true);
                     if (clonedFile != null)
                     {
-                        ReplacePlaceholders(clonedFile, data, dataRow);
-                        clonedFile.Save();
+                        if (clonedFile.MainDocumentPart is null)
+                            throw new ArgumentNullException("clonedFile.MainDocumentPart and/or Body is null.");
+
+                        string? textToReplace;
+
+                        using (StreamReader sr = new(clonedFile.MainDocumentPart.GetStream()))
+                        {
+                            textToReplace = sr.ReadToEnd();
+                        }
+
+                        textToReplace = ReplacePlaceholders(textToReplace, data, dataRow);
+
+                        using StreamWriter sw = new(clonedFile.MainDocumentPart.GetStream(FileMode.Create));
+                        sw.Write(textToReplace);
                         generatedFiles.Add(clonedFileName);
                     }
                 }
-                else
-                {
-                    _logger.LogError($"Unable to clone file from {templateFilePath} to {pathName}");
-                }
+            }
+            else
+            {
+                _logger.LogError($"Unable to clone file from {templateFilePath} to {pathName}");
             }
         }
 
         return generatedFiles;
     }
 
-    private string GetSuffixFileNamePart(string suffixDefinition, string filedNamesDelimiter, DataTable dataTable, DataRow dataRow)
+    public string GetSuffixFileNamePart(string suffixDefinition, string filedNamesSeparator, DataTable dataTable, DataRow dataRow)
     {
         if (!string.IsNullOrEmpty(suffixDefinition) && dataTable is not null)
         {
@@ -83,35 +95,29 @@ public class WordHandler : IWordHandler
             }
 
             if (results.Count > 0)
-                result = string.Join(filedNamesDelimiter, results);
+                result = string.Join(filedNamesSeparator, results);
            
             return result;
         }
         return suffixDefinition;
     }
 
-    private void ReplacePlaceholders(WordprocessingDocument doc, DataTable dataTable, DataRow dataRow)
+    public string ReplacePlaceholders(string input, DataTable dataTable, DataRow dataRow)
     {
-        string? docText = null;
-
-        if (doc.MainDocumentPart is null)
+        if(dataTable is null || dataRow is null)
         {
-            throw new ArgumentNullException("MainDocumentPart and/or Body is null.");
+            return input;
         }
 
-        using (StreamReader sr = new(doc.MainDocumentPart.GetStream()))
-        {
-            docText = sr.ReadToEnd();
-        }
+        string output = input;
 
         foreach (DataColumn column in dataTable.Columns)
         {
             var rowValue = dataRow[column].ToString();
             Regex regex = new("%" + column.ColumnName.ToUpper() + "%");
-            docText = regex.Replace(docText, rowValue!);
+            output = regex.Replace(output, rowValue!);
         }
 
-        using StreamWriter sw = new(doc.MainDocumentPart.GetStream(FileMode.Create));
-        sw.Write(docText);
+        return output;
     }
 }
