@@ -8,10 +8,9 @@ using ExcelToWordTemplateGen.Generator;
 using ExcelToWordTemplateGen.Generator.Handlers.Word;
 using ExcelToWordTemplateGen.Generator.Handlers.Excel;
 
-var application = AppStartup();
-//application.Run();
-
-var generator = application.Services.GetService<IGenerator>();
+var host = AppStartup(args);
+var scope = host.Services.CreateScope();
+var generator = scope.ServiceProvider.GetRequiredService<IGenerator>();
 
 if (generator is not null)
 {
@@ -22,9 +21,6 @@ else
     Log.Logger.Warning("Unable to get required generator service");
 }
 
-await application.StopAsync();
-
-
 static void ConfigurationSetup(IConfigurationBuilder builder)
 {
     builder.SetBasePath(Directory.GetCurrentDirectory())
@@ -32,7 +28,7 @@ static void ConfigurationSetup(IConfigurationBuilder builder)
         .AddEnvironmentVariables();
 }
 
-static IHost AppStartup()
+static IHost AppStartup(string[] args)
 {
     var builder = new ConfigurationBuilder();
     ConfigurationSetup(builder);
@@ -42,7 +38,7 @@ static IHost AppStartup()
         .ReadFrom.Configuration(builder.Build())
         .CreateLogger();
 
-    var host = Host.CreateDefaultBuilder()
+    var host = Host.CreateDefaultBuilder(args)
         .ConfigureServices((context, services) =>
         {
             services.Configure<GeneratorOptions>(context.Configuration.GetSection("Generator"));
